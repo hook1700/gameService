@@ -394,7 +394,7 @@ func SetBuySetHandle(c *gin.Context) {
 	})
 }
 
-//SetSaleSetHandle 设置买入出参数
+//SetSaleSetHandle 设置卖出参数
 func SetSaleSetHandle(c *gin.Context) {
 	var p model.ParamBuyAndSaleSet
 	Eerr := c.Bind(&p)

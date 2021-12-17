@@ -142,6 +142,7 @@ type RespAllOnOff struct {
 type RespAllSwitch struct {
 	BuyAndSale []RespBuyAndSaleSet `json:"buy_and_sale"`
 	AllOnOff   []RespAllOnOff      `json:"all_on_off"`
+	SaleRale   []RespSellingRate    `json:"sale_rale"`
 }
 
 //RespRiskMonitor 返回分控参数
@@ -163,7 +164,7 @@ type RespAssetType struct {
 type RespBuyAndSaleSet struct {
 	Percent         string `json:"percent" mapstructure:"percent" `
 	MarketPrice     string `json:"market_price" mapstructure:"market_price"`
-	ProductId       string `json:"product_id" mapstructure:"product_id"`
+	ProductId       string `json:"product_id,omitempty" mapstructure:"product_id"`
 	Status          string `json:"status" mapstructure:"status"`
 	Types           string `json:"types" mapstructure:"types"`
 	AotuMarketprice string `json:"aotu_marketprice" mapstructure:"aotu_marketprice"`

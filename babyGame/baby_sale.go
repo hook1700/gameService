@@ -40,7 +40,7 @@ func main() {
 
 	for {
 		//判断总开关状态
-		all := redis.GetHashDataAll("baby:ConfigStopAutoSale")
+		all := redis.GetHashDataAll("baby:ConfigStopAuto:sale")
 		data1 := redis.GetHashDataAll("baby:ConfigSale")
 		percent := data1["percent"]
 		percentFloat,ParseFloatErr := strconv.ParseFloat(percent,64)

@@ -20,3 +20,13 @@ func InsertBabyMarketPrice(data model.BabyMarketPrice)  {
 		return
 	}
 }
+
+//GetMarketPriceByTime 根据输入时间返回对应的市场价格
+func GetMarketPriceByTime(str string) (data model.BabyMarketPrice) {
+	err := mysql.DB.Debug().Model(model.BabyMarketPrice{}).Where("created_at < ?",str).Order("id desc").Limit(1).Find(&data).Error
+	if err != nil{
+		logger.Error(err)
+		return
+	}
+	return data
+}

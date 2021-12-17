@@ -78,7 +78,7 @@ func InitConfig()  {
 	babyBuyConfig["types"] = "1"  //买入固定为1
 	redis.CreatHashKey("baby:ConfigBuy", babyBuyConfig)
 
-	//卖出药水参数设置
+	//卖出参数设置
 	babySaleConfig := make(map[string]interface{}, 4)
 	babySaleConfig["percent"] = "10"
 	babySaleConfig["market_price"] = "10000"
@@ -90,13 +90,12 @@ func InitConfig()  {
 	babyStopAutoBuy := make(map[string]interface{}, 2)
 	babyStopAutoBuy["CrlName"] = "buy"
 	babyStopAutoBuy["Super"] = "2"	//1.为打开 2.为关闭
-	redis.CreatHashKey("baby:ConfigStopAutoBuy", babyStopAutoBuy)
+	redis.CreatHashKey("baby:ConfigStopAuto:buy", babyStopAutoBuy)
 	//设置卖半自动总开关
 	babyStopAutoSale := make(map[string]interface{}, 2)
 	babyStopAutoSale["CrlName"] = "sale"
 	babyStopAutoSale["Super"] = "2"	//1.为打开 2.为关闭
-	redis.CreatHashKey("baby:ConfigStopAutoSale", babyStopAutoSale)
-
+	redis.CreatHashKey("baby:ConfigStopAuto:sale", babyStopAutoSale)
 
 	//设置药水的风控
 	riskBabyFall:= make(map[string]interface{}, 5)
@@ -116,10 +115,10 @@ func InitConfig()  {
 	redis.CreatHashKey("baby:ConfigRisk:rise", riskBabyRise)
 	//设置卖出率参数
 	babySaleRate:= make(map[string]interface{}, 4)
-	babySaleRate["time_level"] = "1"  //1.为停止脚本 2.发送钉钉 3.停止脚本且发送钉钉
+	babySaleRate["time_level"] = "60"  //1.为停止脚本 2.发送钉钉 3.停止脚本且发送钉钉
 	babySaleRate["percent"] = "10"
-	babySaleRate["status"] = "rise"
-	babySaleRate["operation_type"] = "2"	//1.为打开 2.为关闭
+	babySaleRate["status"] = "2"
+	babySaleRate["operation_type"] = "1"	//1.为打开 2.为关闭
 	redis.CreatHashKey("baby:ConfigSaleRate", babySaleRate)
 }
 
@@ -145,12 +144,12 @@ func InitConfigTest()  {
 	babyStopAutoBuy := make(map[string]interface{}, 2)
 	babyStopAutoBuy["CrlName"] = "buy"
 	babyStopAutoBuy["Super"] = "1"	//1.为打开 2.为关闭
-	redis.CreatHashKey("baby:ConfigStopAutoBuy", babyStopAutoBuy)
+	redis.CreatHashKey("baby:ConfigStopAuto:buy", babyStopAutoBuy)
 	//设置卖半自动总开关
 	babyStopAutoSale := make(map[string]interface{}, 2)
 	babyStopAutoSale["CrlName"] = "sale"
 	babyStopAutoSale["Super"] = "1"	//1.为打开 2.为关闭
-	redis.CreatHashKey("baby:ConfigStopAutoSale", babyStopAutoSale)
+	redis.CreatHashKey("baby:ConfigStopAuto:sale", babyStopAutoSale)
 
 	//设置药水的风控
 	riskBabyFall:= make(map[string]interface{}, 5)
@@ -172,7 +171,7 @@ func InitConfigTest()  {
 	babySaleRate:= make(map[string]interface{}, 4)
 	babySaleRate["time_level"] = "1"  //1.为停止脚本 2.发送钉钉 3.停止脚本且发送钉钉
 	babySaleRate["percent"] = "2"
-	babySaleRate["status"] = "rise"
+	babySaleRate["status"] = "1"
 	babySaleRate["operation_type"] = "1"	//1.为打开 2.为关闭
 	redis.CreatHashKey("baby:ConfigSaleRate", babySaleRate)
 }

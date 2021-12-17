@@ -196,3 +196,13 @@ func IntToString(i int) string {
 	str := strconv.Itoa(i)
 	return str
 }
+
+// StringToInt64 string to int64
+func StringToInt64(str string) int64 {
+	i, err := strconv.ParseInt(str, 10, 64)
+	if err != nil{
+		logger.Error(err)
+	}
+	return i
+}
+

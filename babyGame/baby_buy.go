@@ -40,7 +40,7 @@ func main() {
 
 	//开始缓存
 	for {
-		all := redis.GetHashDataAll("baby:ConfigStopAutoBuy")
+		all := redis.GetHashDataAll("baby:ConfigStopAuto:buy")
 		//判断总开关状态
 		data1 := redis.GetHashDataAll("baby:ConfigBuy")
 		percent := data1["percent"]

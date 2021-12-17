@@ -4,20 +4,20 @@
  @note
 **/
 
-package controller
+package baby
 
 type Recode int64
 
 const (
-	CodeSuccess Recode = 200
-	CodeInvalidParam Recode = 500
-	CodeServerBusy Recode = 501
+	CodeSuccess      Recode = 200
+	CodeInvalidParam Recode = 501
+	CodeServerBusy   Recode = 500
 )
 
 var codeMsgMap = map[Recode]string{
-	CodeSuccess:          "ok",
-	CodeInvalidParam:     "请求参数错误",
-	CodeServerBusy:       "服务器繁忙",
+	CodeSuccess:      "ok",
+	CodeInvalidParam: "请求参数错误",
+	CodeServerBusy:   "服务器繁忙",
 
 }
 

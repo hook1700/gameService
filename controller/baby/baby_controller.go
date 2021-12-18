@@ -44,7 +44,7 @@ func (h *Controller) BuyAndSellHandler(c *gin.Context) {
 }
 
 //SetBabyRiskHandle 设置baby风控
-func SetBabyRiskHandle(c *gin.Context) {
+func (h *Controller) SetBabyRiskHandle(c *gin.Context) {
 	//获取参数
 	var p model.ParamRiskMng
 	err := c.Bind(&p)
@@ -71,7 +71,7 @@ func SetBabyRiskHandle(c *gin.Context) {
 }
 
 //SetBabyOnOffHandle 设置baby全自动和半自动
-func SetBabyOnOffHandle(c *gin.Context) {
+func (h *Controller) SetBabyOnOffHandle(c *gin.Context) {
 	//获取参数
 	var p model.ParamOnOff
 	err := c.Bind(&p)
@@ -92,7 +92,7 @@ func SetBabyOnOffHandle(c *gin.Context) {
 }
 
 //SetBabyBuyConfHandle 设置买入出参数
-func SetBabyBuyConfHandle(c *gin.Context) {
+func (h *Controller) SetBabyBuyConfHandle(c *gin.Context) {
 	var p model.ParamBuyAndSaleSet
 	//var reps model.RespBuyAndSaleSet
 	Eerr := c.Bind(&p)
@@ -113,7 +113,7 @@ func SetBabyBuyConfHandle(c *gin.Context) {
 }
 
 //SetBabySaleConfHandle 设置卖出参数
-func SetBabySaleConfHandle(c *gin.Context) {
+func (h *Controller) SetBabySaleConfHandle(c *gin.Context) {
 	var p model.ParamBuyAndSaleSet
 	Eerr := c.Bind(&p)
 	if Eerr != nil {
@@ -132,7 +132,7 @@ func SetBabySaleConfHandle(c *gin.Context) {
 }
 
 //GetBabyScriptStatusHandle 获取脚本运行的状态
-func GetBabyScriptStatusHandle(c *gin.Context) {
+func (h *Controller) GetBabyScriptStatusHandle(c *gin.Context) {
 	//获取买入卖出总开关
 	var buyStruct model.RespAllOnOff
 	buy := redis.GetHashDataAll("baby:ConfigStopAuto:buy")
@@ -162,7 +162,7 @@ func GetBabyScriptStatusHandle(c *gin.Context) {
 
 	var all model.RespAllSwitch
 	allOnOffSlice := make([]model.RespAllOnOff, 2)
-	buyAndSaleSetSlice := make([]model.RespBuyAndSaleSet, 4)
+	buyAndSaleSetSlice := make([]model.RespBuyAndSaleSet, 2)
 
 	buyAndSaleSetSlice[0] = babyBuy
 	buyAndSaleSetSlice[1] = babySale
@@ -174,15 +174,15 @@ func GetBabyScriptStatusHandle(c *gin.Context) {
 	all.BuyAndSale = buyAndSaleSetSlice
 
 	//获取买出率
-	var resp model.RespSellingRate
-	sellRate := redis.GetHashDataAll("baby:ConfigSaleRate")
-	mapstructure.Decode(sellRate, &resp)
+	//var resp model.RespSellingRate
+	//sellRate := redis.GetHashDataAll("baby:ConfigSaleRate")
+	//mapstructure.Decode(sellRate, &resp)
+	//all.SaleRale = resp
 	ResponseSuccess(c,all)
-
 }
 
 //SetBabySaleRateHandle 设置卖出率
-func SetBabySaleRateHandle(c *gin.Context) {
+func (h *Controller) SetBabySaleRateHandle(c *gin.Context) {
 	var p model.ParamSellingRate
 	BErr := c.Bind(&p)
 	if BErr != nil {
@@ -197,4 +197,89 @@ func SetBabySaleRateHandle(c *gin.Context) {
 	logger.Info(m)
 	redis.CreatHashKey("baby:ConfigSaleRate", m)
 	ResponseSuccess(c,"")
+}
+
+//GetBabyRiskMonitorHandle  返回监控信息状态
+func (h *Controller) GetBabyRiskMonitorHandle(c *gin.Context) {
+	var fall model.RespRiskMonitor
+	var rise model.RespRiskMonitor
+	fallMap := redis.GetHashDataAll("baby:ConfigRisk:fall")
+	mapstructure.Decode(fallMap, &fall)
+	riseMap := redis.GetHashDataAll("baby:ConfigRisk:rise")
+	mapstructure.Decode(riseMap, &rise)
+
+	all := make([]model.RespRiskMonitor, 2)
+	all[0] = fall
+	all[1] = rise
+
+	//获取买出率
+	var resp model.RespSellingRate
+	sellRate := redis.GetHashDataAll("baby:ConfigSaleRate")
+	mapstructure.Decode(sellRate, &resp)
+
+	type Data1 struct {
+		Risk []model.RespRiskMonitor `json:"risk"`
+		SaleRate model.RespSellingRate `json:"sale_rate"`
+	}
+	var d Data1
+	d.Risk = all
+	d.SaleRate = resp
+
+	ResponseSuccess(c,d)
+}
+
+//UpdateBabyOrderHandle 更新order表
+func (h *Controller) UpdateBabyOrderHandle(c *gin.Context){
+	//获取参数
+	var p model.ParamsUpdateBuyAndSale
+	err := c.Bind(&p)
+	if err != nil {
+		logger.Error(err)
+		ResponseError(c,501)
+		return 
+	}
+
+	//逻辑处理
+	var data model.BabyOrder
+	if p.Status == 1{
+		data.Id=p.Id
+		data.Profit = p.Profit
+		data.SalePrice = p.SalePrice
+		data.Name = p.Name
+		data.TokenId = p.TokenId
+		data.FixPrice = p.FixPrice
+		data.Status = 2
+		data.TxHash = p.TxHash
+		data.MarketPrice = p.MarketPrice
+		mysql.DB.Model(model.BabyOrder{}).Where("id",data.Id).Updates(&data)
+	}
+	//卖出成功就删除订单
+	if p.Status == 2{
+		data.Id=p.Id
+		data.Profit = p.Profit
+		data.SalePrice = p.SalePrice
+		data.Name = p.Name
+		data.TokenId = p.TokenId
+		data.FixPrice = p.FixPrice
+		data.Status = 3
+		data.TxHash = p.TxHash
+		data.MarketPrice = p.MarketPrice
+		mysql.DB.Model(model.BabyOrder{}).Where("id",data.Id).Updates(&data)
+		mysql.DB.Model(model.BabyOrder{}).Delete(&data)
+	}
+	//返回数据
+	ResponseSuccess(c,"")
+}
+
+
+//GetBabyMarketPriceHandle 获取市场价格
+func (h *Controller) GetBabyMarketPriceHandle(c *gin.Context){
+
+	//获取市场价
+	data, err := redis.GetData("baby:marketPrice")
+	if err != nil {
+		ResponseError(c,500)
+		return 
+	}
+	ResponseSuccess(c,data)
 }

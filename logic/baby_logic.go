@@ -127,15 +127,15 @@ func InitConfigTest()  {
 	//买入参数设置
 	babyBuyConfig := make(map[string]interface{}, 4)
 	babyBuyConfig["percent"] = "1"
-	babyBuyConfig["market_price"] = "10000"
+	babyBuyConfig["market_price"] = "10"
 	babyBuyConfig["status"] = "1" //1.打开 2.关闭
 	babyBuyConfig["types"] = "1"  //买入固定为1
 	redis.CreatHashKey("baby:ConfigBuy", babyBuyConfig)
 
-	//卖出药水参数设置
+	//卖出参数设置
 	babySaleConfig := make(map[string]interface{}, 4)
-	babySaleConfig["percent"] = "1"
-	babySaleConfig["market_price"] = "10000"
+	babySaleConfig["percent"] = "10"
+	babySaleConfig["market_price"] = "10"
 	babySaleConfig["status"] = "1"
 	babySaleConfig["types"] = "2"	 //买入固定为2
 	redis.CreatHashKey("baby:ConfigSale", babySaleConfig)
@@ -143,15 +143,15 @@ func InitConfigTest()  {
 	//设置买半自动总开关
 	babyStopAutoBuy := make(map[string]interface{}, 2)
 	babyStopAutoBuy["CrlName"] = "buy"
-	babyStopAutoBuy["Super"] = "1"	//1.为打开 2.为关闭
+	babyStopAutoBuy["Super"] = "2"	//1.为打开 2.为关闭
 	redis.CreatHashKey("baby:ConfigStopAuto:buy", babyStopAutoBuy)
 	//设置卖半自动总开关
 	babyStopAutoSale := make(map[string]interface{}, 2)
 	babyStopAutoSale["CrlName"] = "sale"
-	babyStopAutoSale["Super"] = "1"	//1.为打开 2.为关闭
+	babyStopAutoSale["Super"] = "2"	//1.为打开 2.为关闭
 	redis.CreatHashKey("baby:ConfigStopAuto:sale", babyStopAutoSale)
 
-	//设置药水的风控
+	//设置风控
 	riskBabyFall:= make(map[string]interface{}, 5)
 	riskBabyFall["OperationType"] = "1"  //1.为停止脚本 2.发送钉钉 3.停止脚本且发送钉钉
 	riskBabyFall["Percentage"] = "2"
@@ -200,7 +200,7 @@ func StartBuy(marketPrice float64,percent float64)  {
 			logger.Error(ParseFloatErr)
 		}
 		//判断是否买入
-		if marketPrice * 0.99 > (productPrice/1000000000000000000) * ((100+percent)*0.01){
+		if marketPrice > (productPrice/1000000000000000000) * ((100+percent)*0.01){
 			//添加买入清单
 			var order model.BabyOrder
 			order.MarketPrice = marketPrice

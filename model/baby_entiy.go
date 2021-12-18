@@ -67,6 +67,7 @@ type BabyOrder struct {
 	Status      int                `json:"status"`       //状态 1.买入
 	TokenId     string             `json:"token_id"`     //token
 	MarketPrice float64            `json:"market_price"` //买入市场价
+	TxHash      string             `json:"tx_hash" `     //交易hash
 	CreatedAt   helpers.TimeNormal `json:"created_at"`
 	UpdatedAt   helpers.TimeNormal `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt     `json:"deleted_at"`

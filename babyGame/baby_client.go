@@ -35,6 +35,9 @@ func init() {
 }
 
 func main() {
+	//测试配置
+	//logic.InitConfigTest()
+	//正式环境配置
 	logic.InitConfig()
 	for  {
 		//redis.Close()

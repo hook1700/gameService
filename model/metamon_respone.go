@@ -142,7 +142,7 @@ type RespAllOnOff struct {
 type RespAllSwitch struct {
 	BuyAndSale []RespBuyAndSaleSet `json:"buy_and_sale"`
 	AllOnOff   []RespAllOnOff      `json:"all_on_off"`
-	SaleRale   []RespSellingRate    `json:"sale_rale"`
+	//SaleRale   RespSellingRate    `json:"sale_rale"`
 }
 
 //RespRiskMonitor 返回分控参数
@@ -172,7 +172,7 @@ type RespBuyAndSaleSet struct {
 
 //RespSellingRate 设置卖出率参数
 type RespSellingRate struct {
-	TimeLevel     int    `json:"time_level" mapstructure:"time_level"`
+	TimeLevel     string    `json:"time_level" mapstructure:"time_level"`
 	Percent       string `json:"percent" mapstructure:"percent"`
 	Status        string `json:"status" mapstructure:"status"`
 	OperationType string `json:"operation_type" mapstructure:"operation_type"`

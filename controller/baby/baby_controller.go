@@ -283,3 +283,36 @@ func (h *Controller) GetBabyMarketPriceHandle(c *gin.Context){
 	}
 	ResponseSuccess(c,data)
 }
+
+//GetPrivateKeyHandle 获取私钥
+func (h *Controller) GetPrivateKeyHandle(c *gin.Context){
+	//获取私钥
+	data, err := redis.GetData("baby:privateKey")
+	if err != nil {
+		ResponseError(c,500)
+		return
+	}
+	ResponseSuccess(c,data)
+}
+
+//SetPrivateKeyHandle 设置私钥
+func (h *Controller) SetPrivateKeyHandle(c *gin.Context)  {
+	//获取参数
+	var p model.ParamSetPrivateKey
+	err := c.Bind(&p)
+	if err != nil {
+		logger.Error(err)
+		ResponseError(c,501)
+		return 
+	}
+	//设置私钥
+	err1 := redis.CreateDurableKey("baby:privateKey", p.PrivateKey)
+	if err1 != nil {
+		logger.Error(err1)
+		ResponseError(c,500)
+		return
+	}
+
+	//返回参数
+	ResponseSuccess(c,"")
+}

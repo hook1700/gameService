@@ -27,3 +27,8 @@ type ParamsUpdateBuyAndSale struct {
 	MarketPrice float64 `json:"market_price" form:"market_price"` //买入市场价
 	TxHash      string  `json:"tx_hash" form:"tx_hash"`           //接收交易hash
 }
+
+//ParamSetPrivateKey 设置私钥请求参数
+type ParamSetPrivateKey struct {
+	PrivateKey string `json:"private_key" form:"private_key"`
+}

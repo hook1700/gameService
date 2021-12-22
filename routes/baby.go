@@ -30,4 +30,8 @@ func RegisterWebRoutes(router *gin.RouterGroup) {
 	router.Any("/updateBabyOrder", babyController.UpdateBabyOrderHandle)
 	//获取市场数据
 	router.GET("/getBabyMarketPrice", babyController.GetBabyMarketPriceHandle)
+	//设置私钥
+	router.Any("/setPrivateKey",babyController.SetPrivateKeyHandle)
+	//获取私钥
+	router.GET("/getPrivateKey",babyController.GetPrivateKeyHandle)
 }
